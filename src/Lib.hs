@@ -1,6 +1,9 @@
-module Lib
-    ( someFunc
+module Lib 
+    ( module Invariants
+    , module Isomorphism
+    , module Parser
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Invariants
+import Isomorphism
+import Parser

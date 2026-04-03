@@ -1,0 +1,19 @@
+{
+  "graph": {
+    "nodes": {
+      "node_A": {
+        "metadata": { "label": "alpha" }
+      },
+      "node_B": {
+        "metadata": { "label": "beta" }
+      }
+    },
+    "edges": [
+      {
+        "source": "node_A",
+        "target": "node_B",
+        "relation": "100"
+      }
+    ]
+  }
+}
