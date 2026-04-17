@@ -19,5 +19,8 @@ main = do
             putStrLn "\n=== Проверка пре-фильтра (Инварианты) ==="
             print $ checkInvariants g1 g2
 
+            putStrLn "\n=== Точный поиск изоморфизма (Бэктрекинг) ==="
+            print $ isIsomorphic g1 g2
+
         (Nothing, _) -> putStrLn "\nОшибка: Не удалось прочитать graph1.json"
         (_, Nothing) -> putStrLn "\nОшибка: Не удалось прочитать graph2.json"

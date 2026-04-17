@@ -1,9 +1,9 @@
 module Lib 
     ( module Invariants
-    , module Isomorphism
     , module Parser
+    , module Isomorphism
     ) where
 
 import Invariants
-import Isomorphism
 import Parser
+import Isomorphism
