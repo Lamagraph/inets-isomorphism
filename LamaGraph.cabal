@@ -1,4 +1,4 @@
-cabal-version: 2.2
+cabal-version: 1.12
 
 -- This file has been generated from package.yaml by hpack version 0.38.1.
 --
@@ -9,10 +9,10 @@ version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/LamaGraph#readme>
 homepage:       https://github.com/githubuser/LamaGraph#readme
 bug-reports:    https://github.com/githubuser/LamaGraph/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2026 Author name here
-license:        BSD-3-Clause
+author:         Nikita Kabanov
+maintainer:     kabanovnikita125@gmail.com
+copyright:      2026 Nikita Kabanov
+license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -31,8 +31,6 @@ library
       Isomorphism
       Parser
       Paths_LamaGraph
-  autogen-modules:
-      Paths_LamaGraph
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
@@ -47,8 +45,6 @@ library
 executable LamaGraph-exe
   main-is: Main.hs
   other-modules:
-      Paths_LamaGraph
-  autogen-modules:
       Paths_LamaGraph
   hs-source-dirs:
       app
@@ -66,8 +62,6 @@ test-suite LamaGraph-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_LamaGraph
-  autogen-modules:
       Paths_LamaGraph
   hs-source-dirs:
       test

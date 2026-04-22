@@ -1,10 +1,10 @@
 name:                LamaGraph
 version:             0.1.0.0
 github:              "githubuser/LamaGraph"
-license:             BSD-3-Clause
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2026 Author name here"
+license:             MIT
+author:              "Nikita Kabanov"
+maintainer:          "kabanovnikita125@gmail.com"
+copyright:           "2026 Nikita Kabanov"
 
 extra-source-files:
 - README.md
