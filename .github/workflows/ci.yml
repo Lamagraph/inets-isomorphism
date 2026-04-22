@@ -30,4 +30,4 @@ jobs:
           restore-keys: ${{ runner.os }}-stack-
 
       - name: Run tests
-        run: stack test --system-g
+        run: stack test --system-ghc
