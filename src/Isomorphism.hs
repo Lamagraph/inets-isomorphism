@@ -11,9 +11,9 @@ import Invariants (checkInvariants)
 
 type Mapping = Map Node Node
 
-data IsoState = IsoState 
-    { core_1 :: Mapping  
-    , core_2 :: Mapping  
+data IsoState = IsoState
+    { core_1 :: Mapping
+    , core_2 :: Mapping
     }
 
 isFeasible :: (Eq a, Ord b) => Gr a b -> Gr a b -> IsoState -> Node -> Node -> Bool
@@ -32,7 +32,7 @@ isFeasible g1 g2 st n1 n2 =
 
 
 matchNodes :: (Eq a, Ord b) => Gr a b -> Gr a b -> [Node] -> State IsoState Bool
-matchNodes g1 g2 [] = return True
+matchNodes _ _ [] = return True
 matchNodes g1 g2 (n1 : restG1) = do
     st <- get
     
@@ -59,7 +59,7 @@ matchNodes g1 g2 (n1 : restG1) = do
 
 isIsomorphic :: (Ord a, Ord b) => Gr a b -> Gr a b -> Bool
 isIsomorphic g1 g2 =
-    if not (checkInvariants g1 g2) 
+    if not (checkInvariants g1 g2)
     then False
     else evalState (matchNodes g1 g2 (nodes g1)) emptyState
   where
