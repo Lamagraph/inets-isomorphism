@@ -24,3 +24,9 @@ main = hspec $ do
     prop "reflexivity" $ \n ->
       let g = mkGraph [(1, n :: Int)] [] :: Gr Int Int
       in isIsomorphic g g
+
+    describe "QuickCheck properties" $ do
+        prop "should be isomorphic to itself (reflexivity)" $ \randomNodes ->
+            let nodes = [(n, "Node") | n <- randomNodes]
+                g = mkGraph nodes [] :: Gr String String
+            in isIsomorphic g g `shouldBe` True
