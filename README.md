@@ -35,7 +35,7 @@ stack build
 stack test
 ```
 
-## CI/CD
+## CI
 
 В репозитории настроен GitHub Actions пайплайн (`.github/workflows/ci.yml`).
 При каждом пуше в ветку `main` или создании Pull Request сервер автоматически выполняет:
