@@ -10,21 +10,13 @@ extra-source-files:
 - README.md
 - CHANGELOG.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/githubuser/LamaGraph#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-- fgl
-- aeson
 - containers
-- mtl
+- clash-prelude
+- lamagraph-core
 
 ghc-options:
 - -Wall
@@ -39,9 +31,6 @@ ghc-options:
 
 library:
   source-dirs: src
-  exposed-modules:
-    - Lib
-    - Invariants
 
 executables:
   LamaGraph-exe:
@@ -64,6 +53,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - LamaGraph
-    - hspec
-    - QuickCheck
-    - fgl
+    - tasty
+    - tasty-hunit

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -24,22 +24,14 @@ source-repository head
   location: https://github.com/githubuser/LamaGraph
 
 library
-  exposed-modules:
-      Lib
-      Invariants
-  other-modules:
-      Isomorphism
-      Parser
-      Paths_LamaGraph
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      aeson
-    , base >=4.7 && <5
+      base >=4.7 && <5
+    , clash-prelude
     , containers
-    , fgl
-    , mtl
+    , lamagraph-core
   default-language: Haskell2010
 
 executable LamaGraph-exe
@@ -51,11 +43,10 @@ executable LamaGraph-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       LamaGraph
-    , aeson
     , base >=4.7 && <5
+    , clash-prelude
     , containers
-    , fgl
-    , mtl
+    , lamagraph-core
   default-language: Haskell2010
 
 test-suite LamaGraph-test
@@ -67,12 +58,10 @@ test-suite LamaGraph-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      LamaGraph
-    , QuickCheck
-    , aeson
-    , base >=4.7 && <5
+      base >=4.7 && <5
+    , clash-prelude
     , containers
-    , fgl
-    , hspec
-    , mtl
+    , lamagraph-core
+    , tasty
+    , tasty-hunit
   default-language: Haskell2010
