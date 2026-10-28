@@ -23,6 +23,8 @@ source-repository head
   location: https://github.com/Lamagraph/inets-isomorphism
 
 library
+  exposed-modules:
+      NetSnapshot
   other-modules:
       Paths_inets_isomorphism
   hs-source-dirs:
