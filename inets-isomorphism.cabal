@@ -4,11 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           LamaGraph
+name:           inets-isomorphism
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/LamaGraph#readme>
-homepage:       https://github.com/githubuser/LamaGraph#readme
-bug-reports:    https://github.com/githubuser/LamaGraph/issues
+homepage:       https://github.com/Lamagraph/inets-isomorphism#readme
+bug-reports:    https://github.com/Lamagraph/inets-isomorphism/issues
 author:         Nikita Kabanov
 maintainer:     kabanovnikita125@gmail.com
 copyright:      2026 Nikita Kabanov
@@ -21,9 +20,11 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/LamaGraph
+  location: https://github.com/Lamagraph/inets-isomorphism
 
 library
+  other-modules:
+      Paths_inets_isomorphism
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
@@ -34,26 +35,26 @@ library
     , lamagraph-core
   default-language: Haskell2010
 
-executable LamaGraph-exe
+executable inets-isomorphism-exe
   main-is: Main.hs
   other-modules:
-      Paths_LamaGraph
+      Paths_inets_isomorphism
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      LamaGraph
-    , base >=4.7 && <5
+      base >=4.7 && <5
     , clash-prelude
     , containers
+    , inets-isomorphism
     , lamagraph-core
   default-language: Haskell2010
 
-test-suite LamaGraph-test
+test-suite inets-isomorphism-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_LamaGraph
+      Paths_inets_isomorphism
   hs-source-dirs:
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
@@ -61,6 +62,7 @@ test-suite LamaGraph-test
       base >=4.7 && <5
     , clash-prelude
     , containers
+    , inets-isomorphism
     , lamagraph-core
     , tasty
     , tasty-hunit

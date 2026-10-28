@@ -1,6 +1,6 @@
-name:                LamaGraph
+name:                inets-isomorphism
 version:             0.1.0.0
-github:              "githubuser/LamaGraph"
+github:              "Lamagraph/inets-isomorphism"
 license:             MIT
 author:              "Nikita Kabanov"
 maintainer:          "kabanovnikita125@gmail.com"
@@ -9,8 +9,6 @@ copyright:           "2026 Nikita Kabanov"
 extra-source-files:
 - README.md
 - CHANGELOG.md
-
-description:         Please see the README on GitHub at <https://github.com/githubuser/LamaGraph#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -33,7 +31,7 @@ library:
   source-dirs: src
 
 executables:
-  LamaGraph-exe:
+  inets-isomorphism-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -41,10 +39,10 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - LamaGraph
+    - inets-isomorphism
 
 tests:
-  LamaGraph-test:
+  inets-isomorphism-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -52,6 +50,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - LamaGraph
+    - inets-isomorphism
     - tasty
     - tasty-hunit
