@@ -14,20 +14,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Clone lamagraph-core sources
+        run: git clone --depth 1 https://github.com/Lamagraph/interaction-nets-in-fpga.git ../interaction-nets-in-fpga
+
       - name: Setup Haskell
+        id: setup
         uses: haskell-actions/setup@v2
         with:
-          ghc-version: '9.10.3'
+          ghc-version: '9.8.4'
           enable-stack: true
 
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.stack
-            .stack-work
+          path: ${{ steps.setup.outputs.stack-root }}
           key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml', 'package.yaml') }}
           restore-keys: ${{ runner.os }}-stack-
 
       - name: Run tests
-        run: stack test --system-ghc
+        run: stack test
