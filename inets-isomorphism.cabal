@@ -24,6 +24,7 @@ source-repository head
 
 library
   exposed-modules:
+      Isomorphism
       NetSnapshot
   other-modules:
       Paths_inets_isomorphism
