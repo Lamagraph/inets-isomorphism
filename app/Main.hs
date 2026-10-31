@@ -1,12 +1,14 @@
 module Main (main) where
 
-import Core.Concrete.Initial
-import Core.Node
+import Core.Concrete.Initial (initialEpsAppToIdSimpleNode, initialIdApplyToIdNode)
+import Isomorphism (checkIsomorphism)
+import NetSnapshot (fromVec, mapAddresses)
 
 main :: IO ()
-main = print (foldr countNode (0 :: Int) initialIdApplyToIdNode)
-  where
-    countNode maybeNode count =
-      case maybeNode of
-        Just _ -> count + 1
-        Nothing -> count
+main = do
+  let net = fromVec 0 initialIdApplyToIdNode
+      moved = mapAddresses (+ 5) net
+      other = fromVec 1 initialEpsAppToIdSimpleNode
+  print (checkIsomorphism net net)
+  print (checkIsomorphism net moved)
+  print (checkIsomorphism net other)
