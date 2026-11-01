@@ -58,6 +58,7 @@ test-suite inets-isomorphism-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Assertions
       Paths_inets_isomorphism
   hs-source-dirs:
       test

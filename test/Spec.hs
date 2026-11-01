@@ -19,6 +19,7 @@ import NetSnapshot
 import Test.Tasty
 import Test.Tasty.HUnit
 import Reciprocity
+import Assertions
 
 type Net = NetSnapshot 2 AgentSimpleLambda
 
@@ -69,7 +70,7 @@ renumbering :: TestTree
 renumbering =
   testGroup
     "renumbering keeps the net"
-    [ testCase (name ++ ", " ++ label) (checkIsomorphism net (mapAddresses f net) @?= Right ())
+    [ testCase (name ++ ", " ++ label) (assertIsomorphic net (mapAddresses f net))
     | (name, net) <- samples
     , (label, f) <- relabelings
     ]
@@ -93,7 +94,7 @@ portOrder =
   testGroup
     "port positions matter"
     [ testCase "same net with other addresses" $
-        checkIsomorphism (fork True) (mapAddresses (+ 3) (fork True)) @?= Right ()
+        assertIsomorphic (fork True) (mapAddresses (+ 3) (fork True))
     , testCase "swapped auxiliary ports of apply" $
         assertBool "expected a mismatch" (isLeft (checkIsomorphism (fork True) (fork False)))
     , testCase "free port on another position" $
