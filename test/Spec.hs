@@ -18,6 +18,7 @@ import Isomorphism
 import NetSnapshot
 import Test.Tasty
 import Test.Tasty.HUnit
+import Reciprocity
 
 type Net = NetSnapshot 2 AgentSimpleLambda
 
@@ -99,5 +100,26 @@ portOrder =
         checkIsomorphism (dangling True) (dangling False) @?= Left (PortMismatch 0 0 1)
     ]
 
+idApplyId :: Net
+idApplyId = fromVec 0 initialIdApplyToIdNode
+
+rewired :: Net
+rewired =
+  idApplyId
+    { snapNodes =
+        M.adjust (\n -> n{_primaryPort = Just (Port 0 (Id 0))}) 1 (snapNodes idApplyId)
+    }
+
+reciprocity :: TestTree
+reciprocity =
+  testGroup
+    "pointers are reciprocal"
+    ( [ testCase name (brokenLinks net @?= [])
+      | (name, net) <- samples
+      , name /= "eps app id"
+      ]
+        ++ [testCase "one pointer rewired" (brokenLinks rewired @?= [Broken 0 2, Broken 1 0])]
+    )
+
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity])

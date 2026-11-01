@@ -9,9 +9,8 @@ module Isomorphism
 import Clash.Prelude (KnownNat)
 import Control.Monad (foldM, unless)
 import Core.Node (AddressNumber, Node (..), Port (..))
-import Data.Foldable (toList)
 import qualified Data.Map.Strict as M
-import NetSnapshot (NetSnapshot (..))
+import NetSnapshot (NetSnapshot (..), slots)
 
 data Side = FirstNet | SecondNet
   deriving (Eq, Show)
@@ -35,9 +34,6 @@ bind m a b =
     (Nothing, Nothing) -> Right (Just (Matching (M.insert a b (fwd m)) (M.insert b a (bwd m))))
     (Just b', Just a') | b' == b && a' == a -> Right Nothing
     _ -> Left (MappingConflict a b)
-
-slots :: (KnownNat p) => Node p a -> [Maybe (Maybe (Port p))]
-slots n = Just (_primaryPort n) : toList (_secondaryPorts n)
 
 portPairs
   :: (KnownNat p)

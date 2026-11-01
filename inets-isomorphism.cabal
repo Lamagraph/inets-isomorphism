@@ -26,6 +26,7 @@ library
   exposed-modules:
       Isomorphism
       NetSnapshot
+      Reciprocity
   other-modules:
       Paths_inets_isomorphism
   hs-source-dirs:

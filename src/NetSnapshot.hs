@@ -2,6 +2,7 @@ module NetSnapshot
   ( NetSnapshot (..)
   , fromVec
   , mapAddresses
+  , slots
   ) where
 
 import Clash.Prelude (KnownNat, Vec)
@@ -36,3 +37,6 @@ mapAddresses f (NetSnapshot root nodes) =
       { _primaryPort = fmap fixPort (_primaryPort n)
       , _secondaryPorts = fmap (fmap (fmap fixPort)) (_secondaryPorts n)
       }
+
+slots :: (KnownNat p) => Node p a -> [Maybe (Maybe (Port p))]
+slots n = Just (_primaryPort n) : toList (_secondaryPorts n)
