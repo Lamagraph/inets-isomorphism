@@ -122,5 +122,28 @@ reciprocity =
         ++ [testCase "one pointer rewired" (brokenLinks rewired @?= [Broken 0 2, Broken 1 0])]
     )
 
+openApply :: Bool -> Net
+openApply swapped = fromVec 0 cells
+ where
+  aux = if swapped then Just NotConnected C.:> Just (Connected (Port 1 Primary)) C.:> C.Nil
+        else Just (Connected (Port 1 Primary)) C.:> Just NotConnected C.:> C.Nil
+  slot = if swapped then 1 else 0
+  apply = Node NotConnected aux Apply
+  erase = Node (Connected (Port 0 (Id slot))) (C.repeat Nothing) Erase
+  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells = Just apply C.+>> Just erase C.+>> C.repeat Nothing
+
+subnets :: TestTree
+subnets =
+  testGroup
+    "open nets keep the positions of free ports"
+    [ testCase "same free ports, other addresses" $
+        assertIsomorphic (openApply False) (mapAddresses (+ 4) (openApply False))
+    , testCase "free port moved to another position" $
+        checkIsomorphism (openApply False) (openApply True) @?= Left (PortMismatch 0 0 1)
+    , testCase "checkFrom starts from an interface node" $
+        checkFrom [(0, 4)] (openApply False) (mapAddresses (+ 4) (openApply False)) @?= Right ()
+    ]
+
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets])
