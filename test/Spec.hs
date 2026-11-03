@@ -9,6 +9,7 @@ import Core.Concrete.Initial
   , initialIdApplyToIdNode
   , initialIdEraseNode
   , initialLoopEdge
+  , initialIdApplyToIdMM
   )
 import Core.Concrete.ReduceRulesLambda (AgentSimpleLambda (..))
 import Core.Node
@@ -20,6 +21,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 import Reciprocity
 import Assertions
+import CoreRun (runCore)
 
 type Net = NetSnapshot 2 AgentSimpleLambda
 
@@ -145,5 +147,24 @@ subnets =
         checkFrom [(0, 4)] (openApply False) (mapAddresses (+ 4) (openApply False)) @?= Right ()
     ]
 
+singleLambda :: Net
+singleLambda = fromVec 0 cells
+ where
+  node =
+    Node
+      NotConnected
+      (Just (Connected (Port 0 (Id 1))) C.:> Just (Connected (Port 0 (Id 0))) C.:> C.Nil)
+      Abstract
+  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells = Just node C.+>> C.repeat Nothing
+
+processor :: TestTree
+processor =
+  testGroup
+    "result of the processor"
+    [ testCase "id apply to id reduces to a single lambda" $
+        assertIsomorphic singleLambda (runCore 100 initialIdApplyToIdNode 0 initialIdApplyToIdMM)
+    ]
+
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets, processor])

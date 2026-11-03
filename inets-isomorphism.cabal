@@ -59,6 +59,7 @@ test-suite inets-isomorphism-test
   main-is: Spec.hs
   other-modules:
       Assertions
+      CoreRun
       Paths_inets_isomorphism
   hs-source-dirs:
       test
