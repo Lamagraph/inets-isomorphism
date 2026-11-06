@@ -145,5 +145,44 @@ subnets =
         checkFrom [(0, 4)] (openApply False) (mapAddresses (+ 4) (openApply False)) @?= Right ()
     ]
 
+twoAbstracts :: Net
+twoAbstracts = fromVec cells
+ where
+  toB2 = Just (Connected (Port 1 (Id 1)))
+  toB1 = Just (Connected (Port 0 (Id 1)))
+  toErase = Just (Connected (Port 2 Primary))
+  b1 = Node NotConnected (Just NotConnected C.:> toB2 C.:> C.Nil) Abstract
+  b2 = Node NotConnected (toErase C.:> toB1 C.:> C.Nil) Abstract
+  erase = Node (Connected (Port 1 (Id 0))) (C.repeat Nothing) Erase
+  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells = Just b1 C.+>> Just b2 C.+>> Just erase C.+>> C.repeat Nothing
+
+swapFirstTwo :: AddressNumber -> AddressNumber
+swapFirstTwo a
+  | a == 0 = 1
+  | a == 1 = 0
+  | otherwise = a
+
+emptyNet :: Net
+emptyNet = NetSnapshot M.empty
+
+startChoice :: TestTree
+startChoice =
+  testGroup
+    "start of the traversal"
+    [ testCase "the second candidate is the right one" $
+        assertIsomorphic (mapAddresses swapFirstTwo twoAbstracts) twoAbstracts
+    , testCase "no candidate fits" $
+        assertBool "expected a mismatch" (isLeft (checkIsomorphism twoAbstracts otherLabel))
+    , testCase "empty net against a net" $
+        checkIsomorphism emptyNet twoAbstracts @?= Left NoStartNode
+    , testCase "net against an empty net" $
+        checkIsomorphism twoAbstracts emptyNet @?= Left NoStartNode
+    , testCase "two empty nets" $
+        checkIsomorphism emptyNet emptyNet @?= Right ()
+    ]
+ where
+  otherLabel = twoAbstracts{snapNodes = M.adjust (\n -> n{_nodeType = Abstract}) 2 (snapNodes twoAbstracts)}
+
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets, startChoice])
