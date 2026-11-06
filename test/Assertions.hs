@@ -18,6 +18,8 @@ sideName FirstNet = "expected"
 sideName SecondNet = "actual"
 
 describe :: Mismatch -> String
+describe NoStartNode =
+  "no node of the actual net matches the starting node of the expected net (same agent, free port at the same position)"
 describe (MissingNode side addr) =
   "the " ++ sideName side ++ " net has no node at address " ++ show addr
 describe (LabelMismatch a b) =

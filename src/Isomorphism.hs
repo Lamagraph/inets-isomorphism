@@ -9,6 +9,7 @@ module Isomorphism
 import Clash.Prelude (KnownNat)
 import Control.Monad (foldM, unless)
 import Core.Node (AddressNumber, Node (..), Port (..))
+import Data.Either (isRight)
 import qualified Data.Map.Strict as M
 import NetSnapshot (NetSnapshot (..), slots)
 
@@ -16,7 +17,8 @@ data Side = FirstNet | SecondNet
   deriving (Eq, Show)
 
 data Mismatch
-  = MissingNode Side AddressNumber
+  = NoStartNode
+  | MissingNode Side AddressNumber
   | LabelMismatch AddressNumber AddressNumber
   | PortMismatch AddressNumber AddressNumber Int
   | MappingConflict AddressNumber AddressNumber
@@ -80,10 +82,33 @@ checkFrom starts net1 net2 = do
     (m', new) <- foldM bindNew (m, []) pairs
     go m' (new ++ rest)
 
+freeSlots :: (KnownNat p) => Node p a -> [Int]
+freeSlots n = [i | (i, Just Nothing) <- zip [0 ..] (slots n)]
+
+startPairs
+  :: (KnownNat p, Eq a)
+  => NetSnapshot p a -> NetSnapshot p a -> [(AddressNumber, AddressNumber)]
+startPairs net1 net2 =
+  case [(a, na, i) | (a, na) <- M.toList (snapNodes net1), i <- freeSlots na] of
+    (a, na, i) : _ -> candidates a na (elem i . freeSlots)
+    [] -> case M.lookupMin (snapNodes net1) of
+      Just (a, na) -> candidates a na (const True)
+      Nothing -> []
+ where
+  candidates a na ok =
+    [(a, b) | (b, nb) <- M.toList (snapNodes net2), _nodeType nb == _nodeType na, ok nb]
+
 checkIsomorphism
   :: (KnownNat p, Eq a)
   => NetSnapshot p a -> NetSnapshot p a -> Either Mismatch ()
-checkIsomorphism net1 net2 = checkFrom [(snapRoot net1, snapRoot net2)] net1 net2
+checkIsomorphism net1 net2
+  | M.null (snapNodes net1) && M.null (snapNodes net2) = Right ()
+  | otherwise =
+      case map (\start -> checkFrom [start] net1 net2) (startPairs net1 net2) of
+        [] -> Left NoStartNode
+        attempts@(first : _)
+          | any isRight attempts -> Right ()
+          | otherwise -> first
 
 isIsomorphic :: (KnownNat p, Eq a) => NetSnapshot p a -> NetSnapshot p a -> Bool
 isIsomorphic net1 net2 = either (const False) (const True) (checkIsomorphism net1 net2)

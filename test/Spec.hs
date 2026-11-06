@@ -25,11 +25,11 @@ type Net = NetSnapshot 2 AgentSimpleLambda
 
 samples :: [(String, Net)]
 samples =
-  [ ("id apply id", fromVec 0 initialIdApplyToIdNode)
-  , ("eps app id", fromVec 1 initialEpsAppToIdNode)
-  , ("eps app id simple", fromVec 1 initialEpsAppToIdSimpleNode)
-  , ("id erase", fromVec 0 initialIdEraseNode)
-  , ("loop edge", fromVec 0 (fmap (fmap _containedNode) initialLoopEdge))
+  [ ("id apply id", fromVec initialIdApplyToIdNode)
+  , ("eps app id", fromVec initialEpsAppToIdNode)
+  , ("eps app id simple", fromVec initialEpsAppToIdSimpleNode)
+  , ("id erase", fromVec initialIdEraseNode)
+  , ("loop edge", fromVec (fmap (fmap _containedNode) initialLoopEdge))
   ]
 
 relabelings :: [(String, AddressNumber -> AddressNumber)]
@@ -41,7 +41,7 @@ relabelings =
   ]
 
 fork :: Bool -> Net
-fork eraseFirst = fromVec 0 cells
+fork eraseFirst = fromVec cells
  where
   eraseSlot = if eraseFirst then 0 else 1
   absSlot = if eraseFirst then 1 else 0
@@ -55,16 +55,16 @@ fork eraseFirst = fromVec 0 cells
   cells = Just apply C.+>> Just erase C.+>> Just abstr C.+>> C.repeat Nothing
 
 dangling :: Bool -> Net
-dangling erasePort0 = fromVec 0 cells
+dangling erasePort0 = fromVec cells
  where
   slot = if erasePort0 then 0 else 1
   toErase = Just (Connected (Port 1 Primary))
   free = Just NotConnected
   aux = if erasePort0 then toErase C.:> free C.:> C.Nil else free C.:> toErase C.:> C.Nil
-  root = Node NotConnected aux Abstract
+  top = Node NotConnected aux Abstract
   erase = Node (Connected (Port 0 (Id slot))) (C.repeat Nothing) Erase
   cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
-  cells = Just root C.+>> Just erase C.+>> C.repeat Nothing
+  cells = Just top C.+>> Just erase C.+>> C.repeat Nothing
 
 renumbering :: TestTree
 renumbering =
@@ -85,7 +85,7 @@ rejections =
         checkIsomorphism base withJunk @?= Left (Disconnected 3 4 3)
     ]
  where
-  base = fromVec 0 initialIdApplyToIdNode
+  base = fromVec initialIdApplyToIdNode
   relabelled = base{snapNodes = M.adjust (\n -> n{_nodeType = Erase}) 1 (snapNodes base)}
   withJunk = base{snapNodes = M.insert 7 (snapNodes base M.! 1) (snapNodes base)}
 
@@ -102,7 +102,7 @@ portOrder =
     ]
 
 idApplyId :: Net
-idApplyId = fromVec 0 initialIdApplyToIdNode
+idApplyId = fromVec initialIdApplyToIdNode
 
 rewired :: Net
 rewired =
@@ -123,7 +123,7 @@ reciprocity =
     )
 
 openApply :: Bool -> Net
-openApply swapped = fromVec 0 cells
+openApply swapped = fromVec cells
  where
   aux = if swapped then Just NotConnected C.:> Just (Connected (Port 1 Primary)) C.:> C.Nil
         else Just (Connected (Port 1 Primary)) C.:> Just NotConnected C.:> C.Nil
