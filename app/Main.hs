@@ -1,10 +1,10 @@
 module Main (main) where
 
-import Core.Concrete.Initial
-  ( initialEpsAppToIdNode
-  , initialEpsAppToIdSimpleNode
-  , initialIdApplyToIdNode
-  )
+import Core.Concrete.Initial (
+  initialEpsAppToIdNode,
+  initialEpsAppToIdSimpleNode,
+  initialIdApplyToIdNode,
+ )
 import Isomorphism (checkIsomorphism)
 import NetSnapshot (fromVec, mapAddresses)
 import Reciprocity (brokenLinks)

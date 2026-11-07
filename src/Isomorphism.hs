@@ -1,10 +1,10 @@
-module Isomorphism
-  ( Mismatch (..)
-  , Side (..)
-  , checkIsomorphism
-  , checkFrom
-  , isIsomorphic
-  ) where
+module Isomorphism (
+  Mismatch (..),
+  Side (..),
+  checkIsomorphism,
+  checkFrom,
+  isIsomorphic,
+) where
 
 import Clash.Prelude (KnownNat)
 import Control.Monad (foldM, unless)
@@ -37,10 +37,13 @@ bind m a b =
     (Just b', Just a') | b' == b && a' == a -> Right Nothing
     _ -> Left (MappingConflict a b)
 
-portPairs
-  :: (KnownNat p)
-  => AddressNumber -> AddressNumber -> Node p a -> Node p a
-  -> Either Mismatch [(AddressNumber, AddressNumber)]
+portPairs ::
+  (KnownNat p) =>
+  AddressNumber ->
+  AddressNumber ->
+  Node p a ->
+  Node p a ->
+  Either Mismatch [(AddressNumber, AddressNumber)]
 portPairs a b na nb = concat <$> sequence (zipWith3 one [0 :: Int ..] (slots na) (slots nb))
  where
   one i sa sb = case (sa, sb) of
@@ -50,12 +53,12 @@ portPairs a b na nb = concat <$> sequence (zipWith3 one [0 :: Int ..] (slots na)
       | px == py -> Right [(x, y)]
     _ -> Left (PortMismatch a b i)
 
-checkFrom
-  :: (KnownNat p, Eq a)
-  => [(AddressNumber, AddressNumber)]
-  -> NetSnapshot p a
-  -> NetSnapshot p a
-  -> Either Mismatch ()
+checkFrom ::
+  (KnownNat p, Eq a) =>
+  [(AddressNumber, AddressNumber)] ->
+  NetSnapshot p a ->
+  NetSnapshot p a ->
+  Either Mismatch ()
 checkFrom starts net1 net2 = do
   (m0, queue0) <- foldM bindNew (Matching M.empty M.empty, []) starts
   m <- go m0 queue0
@@ -85,9 +88,9 @@ checkFrom starts net1 net2 = do
 freeSlots :: (KnownNat p) => Node p a -> [Int]
 freeSlots n = [i | (i, Just Nothing) <- zip [0 ..] (slots n)]
 
-startPairs
-  :: (KnownNat p, Eq a)
-  => NetSnapshot p a -> NetSnapshot p a -> [(AddressNumber, AddressNumber)]
+startPairs ::
+  (KnownNat p, Eq a) =>
+  NetSnapshot p a -> NetSnapshot p a -> [(AddressNumber, AddressNumber)]
 startPairs net1 net2 =
   case [(a, na, i) | (a, na) <- M.toList (snapNodes net1), i <- freeSlots na] of
     (a, na, i) : _ -> candidates a na (elem i . freeSlots)
@@ -98,9 +101,9 @@ startPairs net1 net2 =
   candidates a na ok =
     [(a, b) | (b, nb) <- M.toList (snapNodes net2), _nodeType nb == _nodeType na, ok nb]
 
-checkIsomorphism
-  :: (KnownNat p, Eq a)
-  => NetSnapshot p a -> NetSnapshot p a -> Either Mismatch ()
+checkIsomorphism ::
+  (KnownNat p, Eq a) =>
+  NetSnapshot p a -> NetSnapshot p a -> Either Mismatch ()
 checkIsomorphism net1 net2
   | M.null (snapNodes net1) && M.null (snapNodes net2) = Right ()
   | otherwise =

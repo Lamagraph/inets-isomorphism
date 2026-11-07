@@ -1,6 +1,6 @@
-module Assertions
-  ( assertIsomorphic
-  ) where
+module Assertions (
+  assertIsomorphic,
+) where
 
 import Clash.Prelude (KnownNat)
 import Isomorphism (Mismatch (..), Side (..), checkIsomorphism)

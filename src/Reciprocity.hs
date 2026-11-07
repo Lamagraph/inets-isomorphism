@@ -1,7 +1,7 @@
-module Reciprocity
-  ( Broken (..)
-  , brokenLinks
-  ) where
+module Reciprocity (
+  Broken (..),
+  brokenLinks,
+) where
 
 import Clash.Prelude (KnownNat)
 import Core.Node (AddressNumber, IdOfPort (..), Port (..))

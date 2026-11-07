@@ -2,24 +2,24 @@
 
 module Main (main) where
 
+import Assertions
 import qualified Clash.Prelude as C
-import Core.Concrete.Initial
-  ( initialEpsAppToIdNode
-  , initialEpsAppToIdSimpleNode
-  , initialIdApplyToIdNode
-  , initialIdEraseNode
-  , initialLoopEdge
-  )
+import Core.Concrete.Initial (
+  initialEpsAppToIdNode,
+  initialEpsAppToIdSimpleNode,
+  initialIdApplyToIdNode,
+  initialIdEraseNode,
+  initialLoopEdge,
+ )
 import Core.Concrete.ReduceRulesLambda (AgentSimpleLambda (..))
 import Core.Node
 import Data.Either (isLeft)
 import qualified Data.Map.Strict as M
 import Isomorphism
 import NetSnapshot
+import Reciprocity
 import Test.Tasty
 import Test.Tasty.HUnit
-import Reciprocity
-import Assertions
 
 type Net = NetSnapshot 2 AgentSimpleLambda
 
@@ -125,8 +125,10 @@ reciprocity =
 openApply :: Bool -> Net
 openApply swapped = fromVec cells
  where
-  aux = if swapped then Just NotConnected C.:> Just (Connected (Port 1 Primary)) C.:> C.Nil
-        else Just (Connected (Port 1 Primary)) C.:> Just NotConnected C.:> C.Nil
+  aux =
+    if swapped
+      then Just NotConnected C.:> Just (Connected (Port 1 Primary)) C.:> C.Nil
+      else Just (Connected (Port 1 Primary)) C.:> Just NotConnected C.:> C.Nil
   slot = if swapped then 1 else 0
   apply = Node NotConnected aux Apply
   erase = Node (Connected (Port 0 (Id slot))) (C.repeat Nothing) Erase

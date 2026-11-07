@@ -1,9 +1,9 @@
-module NetSnapshot
-  ( NetSnapshot (..)
-  , fromVec
-  , mapAddresses
-  , slots
-  ) where
+module NetSnapshot (
+  NetSnapshot (..),
+  fromVec,
+  mapAddresses,
+  slots,
+) where
 
 import Clash.Prelude (KnownNat, Vec)
 import Core.Node (AddressNumber, Node (..), Port (..))
