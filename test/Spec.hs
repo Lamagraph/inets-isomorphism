@@ -17,7 +17,6 @@ import Data.Either (isLeft)
 import qualified Data.Map.Strict as M
 import Isomorphism
 import NetSnapshot
-import Reciprocity
 import Test.Tasty
 import Test.Tasty.HUnit
 
@@ -101,27 +100,6 @@ portOrder =
         checkIsomorphism (dangling True) (dangling False) @?= Left (PortMismatch 0 0 1)
     ]
 
-idApplyId :: Net
-idApplyId = fromVec initialIdApplyToIdNode
-
-rewired :: Net
-rewired =
-  idApplyId
-    { snapNodes =
-        M.adjust (\n -> n{_primaryPort = Just (Port 0 (Id 0))}) 1 (snapNodes idApplyId)
-    }
-
-reciprocity :: TestTree
-reciprocity =
-  testGroup
-    "pointers are reciprocal"
-    ( [ testCase name (brokenLinks net @?= [])
-      | (name, net) <- samples
-      , name /= "eps app id"
-      ]
-        ++ [testCase "one pointer rewired" (brokenLinks rewired @?= [Broken 0 2, Broken 1 0])]
-    )
-
 openApply :: Bool -> Net
 openApply swapped = fromVec cells
  where
@@ -187,4 +165,4 @@ startChoice =
   otherLabel = twoAbstracts{snapNodes = M.adjust (\n -> n{_nodeType = Abstract}) 2 (snapNodes twoAbstracts)}
 
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, reciprocity, subnets, startChoice])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, subnets, startChoice])

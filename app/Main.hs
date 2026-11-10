@@ -1,13 +1,8 @@
 module Main (main) where
 
-import Core.Concrete.Initial (
-  initialEpsAppToIdNode,
-  initialEpsAppToIdSimpleNode,
-  initialIdApplyToIdNode,
- )
+import Core.Concrete.Initial (initialEpsAppToIdSimpleNode, initialIdApplyToIdNode)
 import Isomorphism (checkIsomorphism)
 import NetSnapshot (fromVec, mapAddresses)
-import Reciprocity (brokenLinks)
 
 main :: IO ()
 main = do
@@ -17,4 +12,3 @@ main = do
   print (checkIsomorphism net net)
   print (checkIsomorphism net moved)
   print (checkIsomorphism net other)
-  print (brokenLinks (fromVec initialEpsAppToIdNode))
