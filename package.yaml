@@ -53,3 +53,5 @@ tests:
     - inets-isomorphism
     - tasty
     - tasty-hunit
+    - hedgehog
+    - tasty-hedgehog

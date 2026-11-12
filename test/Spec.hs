@@ -17,6 +17,7 @@ import Data.Either (isLeft)
 import qualified Data.Map.Strict as M
 import Isomorphism
 import NetSnapshot
+import Properties (properties)
 import Test.Tasty
 import Test.Tasty.HUnit
 
@@ -50,7 +51,7 @@ fork eraseFirst = fromVec cells
   apply = Node NotConnected aux Apply
   erase = Node (Connected (Port 0 (Id eraseSlot))) (C.repeat Nothing) Erase
   abstr = Node (Connected (Port 0 (Id absSlot))) (C.repeat (Just NotConnected)) Abstract
-  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells :: C.Vec CellsNumber (Maybe (Node 2 AgentSimpleLambda))
   cells = Just apply C.+>> Just erase C.+>> Just abstr C.+>> C.repeat Nothing
 
 dangling :: Bool -> Net
@@ -62,7 +63,7 @@ dangling erasePort0 = fromVec cells
   aux = if erasePort0 then toErase C.:> free C.:> C.Nil else free C.:> toErase C.:> C.Nil
   top = Node NotConnected aux Abstract
   erase = Node (Connected (Port 0 (Id slot))) (C.repeat Nothing) Erase
-  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells :: C.Vec CellsNumber (Maybe (Node 2 AgentSimpleLambda))
   cells = Just top C.+>> Just erase C.+>> C.repeat Nothing
 
 renumbering :: TestTree
@@ -110,7 +111,7 @@ openApply swapped = fromVec cells
   slot = if swapped then 1 else 0
   apply = Node NotConnected aux Apply
   erase = Node (Connected (Port 0 (Id slot))) (C.repeat Nothing) Erase
-  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells :: C.Vec CellsNumber (Maybe (Node 2 AgentSimpleLambda))
   cells = Just apply C.+>> Just erase C.+>> C.repeat Nothing
 
 subnets :: TestTree
@@ -134,7 +135,7 @@ twoAbstracts = fromVec cells
   b1 = Node NotConnected (Just NotConnected C.:> toB2 C.:> C.Nil) Abstract
   b2 = Node NotConnected (toErase C.:> toB1 C.:> C.Nil) Abstract
   erase = Node (Connected (Port 1 (Id 0))) (C.repeat Nothing) Erase
-  cells :: C.Vec 16 (Maybe (Node 2 AgentSimpleLambda))
+  cells :: C.Vec CellsNumber (Maybe (Node 2 AgentSimpleLambda))
   cells = Just b1 C.+>> Just b2 C.+>> Just erase C.+>> C.repeat Nothing
 
 swapFirstTwo :: AddressNumber -> AddressNumber
@@ -165,4 +166,4 @@ startChoice =
   otherLabel = twoAbstracts{snapNodes = M.adjust (\n -> n{_nodeType = Abstract}) 2 (snapNodes twoAbstracts)}
 
 main :: IO ()
-main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, subnets, startChoice])
+main = defaultMain (testGroup "Isomorphism" [renumbering, rejections, portOrder, subnets, startChoice, properties])

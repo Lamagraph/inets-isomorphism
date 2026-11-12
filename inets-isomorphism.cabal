@@ -58,6 +58,7 @@ test-suite inets-isomorphism-test
   main-is: Spec.hs
   other-modules:
       Assertions
+      Properties
       Paths_inets_isomorphism
   hs-source-dirs:
       test
@@ -66,8 +67,10 @@ test-suite inets-isomorphism-test
       base >=4.7 && <5
     , clash-prelude
     , containers
+    , hedgehog
     , inets-isomorphism
     , lamagraph-core
     , tasty
+    , tasty-hedgehog
     , tasty-hunit
   default-language: Haskell2010
